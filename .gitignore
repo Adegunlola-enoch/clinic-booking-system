@@ -1,0 +1,32 @@
+
+# Dependencies
+node_modules/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Build outputs
+dist/
+.next/
+out/
+build/
+
+# Generated files
+src/generated/prisma/
+
+# Logs
+*.log
+npm-debug.log*
+
+# AI coding assistant files
+**/.agents/
+**/.claude/
+**/.windsurf/
+**/AGENTS.md
+**/CLAUDE.md
+
+# Local tooling
+.vercel/
+.DS_Store

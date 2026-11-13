@@ -1,0 +1,57 @@
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum BookingStatus {
+  confirmed
+  cancelled
+}
+
+model Slot {
+  id       String    @id
+  provider String
+  start    DateTime
+  end      DateTime
+  bookings Booking[]
+
+  @@map("slots")
+}
+
+model Booking {
+  id        String        @id @default(cuid())
+  slotId    String        @map("slot_id")
+  name      String
+  email     String
+  status    BookingStatus @default(confirmed)
+  createdAt DateTime      @default(now()) @map("created_at")
+
+  slot Slot @relation(fields: [slotId], references: [id], onDelete: Restrict)
+
+  @@index([email, createdAt, id])
+  @@map("bookings")
+}
+
+model IdempotencyRecord {
+  key         String   @id
+  requestHash String   @map("request_hash")
+  statusCode  Int?     @map("status_code")
+  response    Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("idempotency_records")
+}
+
+model BookingAttempt {
+  id        String   @id @default(cuid())
+  email     String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([email, createdAt])
+  @@map("booking_attempts")
+}
